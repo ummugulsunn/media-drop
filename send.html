@@ -1,8 +1,8 @@
-<!doctype html><meta charset="utf-8"><title>send</title><body style="font:14px system-ui;background:#111;color:#ddd">
-<p id="s">loading…</p>
+<!doctype html><meta charset="utf-8"><title>media drop · sending</title><body style="font:16px system-ui;background:#0B0B12;color:#ddd;padding:24px">
+<h3>sending videos to the other tab…</h3><pre id="s"></pre>
 <script>
-(async()=>{const p=new URLSearchParams(location.search);const f=p.get('f');const s=document.getElementById('s');
-try{const r=await fetch('v/'+f);const buf=await r.arrayBuffer();s.textContent='sending '+buf.byteLength;
-const t=window.opener||(window.parent!==window?window.parent:null);if(t){t.postMessage({mdName:f,mdBuf:buf},'*',[buf]);s.textContent='sent '+f;setTimeout(()=>window.close(),800);}else s.textContent='no opener';}
-catch(e){s.textContent='ERR '+e.message}})();
+(async()=>{const p=new URLSearchParams(location.search);const fs=(p.get('f')||'').split(',').filter(Boolean);const s=document.getElementById('s');
+const t=window.opener||(window.parent!==window?window.parent:null); if(!t){s.textContent='no opener';return;}
+for(const f of fs){try{s.textContent+='loading '+f+'… ';const r=await fetch('v/'+f);const buf=await r.arrayBuffer();t.postMessage({mdName:f,mdBuf:buf},'*',[buf]);s.textContent+='sent ('+Math.round(buf.byteLength/1e6*10)/10+' MB)\n';}catch(e){s.textContent+='ERR '+e.message+'\n'}}
+s.textContent+='\nall done — you can close this tab.';})();
 </script>

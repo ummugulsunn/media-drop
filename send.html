@@ -1,0 +1,8 @@
+<!doctype html><meta charset="utf-8"><title>send</title><body style="font:14px system-ui;background:#111;color:#ddd">
+<p id="s">loading…</p>
+<script>
+(async()=>{const p=new URLSearchParams(location.search);const f=p.get('f');const s=document.getElementById('s');
+try{const r=await fetch('v/'+f);const buf=await r.arrayBuffer();s.textContent='sending '+buf.byteLength;
+if(window.opener){window.opener.postMessage({mdName:f,mdBuf:buf},'*',[buf]);s.textContent='sent '+f;setTimeout(()=>window.close(),800);}else s.textContent='no opener';}
+catch(e){s.textContent='ERR '+e.message}})();
+</script>
